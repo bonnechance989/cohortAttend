@@ -1,0 +1,28 @@
+<template>
+    <lightning-card title="Worship Service Attendance" icon-name="standard:contact">
+        <div class="slds-var-m-around_medium">
+            <template if:true={contacts}>
+                <ul class="slds-list_vertical slds-list_vertical-space">
+                    <template for:each={contacts} for:item="contact">
+                        <li key={contact.Id}>
+                            <div class="contact-item">
+                                <span>{contact.Name}</span>
+                                <lightning-input type="checkbox" label="Present" checked={contact.Present__c} data-id={contact.Id} onchange={handlePresenceChange}></lightning-input>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+            <template if:true={errorMessage}>
+                <div class="slds-notify slds-notify_alert slds-theme_error" role="alert">
+                    <h2>{errorMessage}</h2>
+                </div>
+            </template>
+        </div>
+        <div class="new-contact slds-var-m-around_medium">
+            <lightning-input type="text" label="First Name" value={newFirstName} onchange={handleFirstNameChange}></lightning-input>
+            <lightning-input type="text" label="Last Name" value={newLastName} onchange={handleLastNameChange}></lightning-input>
+            <lightning-button label="Add New Contact" onclick={handleCreateContact}></lightning-button>
+        </div>
+    </lightning-card>
+</template>

@@ -5,6 +5,13 @@
 // You can also execute the entire file by running the command:
 //     SFDX: Execute Anonymous Apex with Editor Contents
 
-string tempvar = 'Enter_your_name_here';
-System.debug('Hello World!');
-System.debug('My name is ' + tempvar);
+List<Contact> contactsToInsert = new List<Contact>{
+    new Contact(FirstName='Alex', LastName='Johnson', Worship_Cohort__c=true),
+    new Contact(FirstName='Casey', LastName='Lee', Worship_Cohort__c=true),
+    new Contact(FirstName='Jordan', LastName='Smith', Worship_Cohort__c=true),
+    new Contact(FirstName='Taylor', LastName='Brown', Worship_Cohort__c=true),
+    new Contact(FirstName='Jamie', LastName='Garcia', Worship_Cohort__c=true)
+};
+
+insert contactsToInsert;
+
