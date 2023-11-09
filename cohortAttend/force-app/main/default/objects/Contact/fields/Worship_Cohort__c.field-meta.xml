@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Worship_Cohort__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Is this contact to be added to the Worship Cohort?</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Is this contact to be added to the Worship Cohort?</inlineHelpText>
+    <label>Worship Cohort</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>
