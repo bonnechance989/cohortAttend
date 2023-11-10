@@ -24,7 +24,7 @@ export default class WorshipServiceAttendance extends LightningElement {
         getWorshipCohortContacts({ serviceDate: this.serviceDate })
         .then(result => {
             console.log('Contacts fetched:', result);
-            this.contacts = result.sort((a, b) => a.LastName.localeCompare(b.LastName));
+            this.contacts = [...result].sort((a, b) => a.LastName.localeCompare(b.LastName));
             console.log('Sorted contacts:', this.contacts);
             this.updateTotalAttendance();
         })
