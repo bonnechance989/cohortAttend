@@ -1,2 +1,2 @@
 # cohortAttend
-attempt at lwc
+lwc that takes attendance
