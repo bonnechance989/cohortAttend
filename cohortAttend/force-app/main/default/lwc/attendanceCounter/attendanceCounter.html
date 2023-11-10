@@ -1,0 +1,10 @@
+<template>
+    <div class="attendance-counter">
+        
+        <template for:each={sortedRecords} for:item="record">
+            <div key={record.date} class="slds-var-m-around_small">
+                Date: {record.date}, Total Attendance: {record.totalAttendance}
+            </div>
+        </template>
+    </div>
+</template>

@@ -1,12 +1,31 @@
 <template>
     <lightning-card title="Worship Service Attendance" icon-name="standard:contact">
+        <c-attendance-counter attendance-records={attendanceRecords}></c-attendance-counter>
+        <div class="slds-var-m-around_medium">
+            <lightning-input 
+                type="number" 
+                label="Total Attendance" 
+                value={totalAttendance} 
+                onchange={handleTotalAttendanceChange}>
+            </lightning-input>
+        </div>
+        <!-- Service Date Input -->
+        <div class="slds-var-m-around_medium">
+            <lightning-input 
+                type="date" 
+                label="Service Date" 
+                value={serviceDate} 
+                onchange={handleDateChange}>
+            </lightning-input>
+        </div>
+        <!-- List of Contacts -->
         <div class="slds-var-m-around_medium">
             <template if:true={contacts}>
                 <ul class="slds-list_vertical slds-list_vertical-space">
                     <template for:each={contacts} for:item="contact">
                         <li key={contact.Id}>
                             <div class="contact-item">
-                                <span>{contact.Name}</span>
+                                <span>{contact.FirstName} {contact.LastName}</span>
                                 <lightning-input type="checkbox" label="Present" checked={contact.Present__c} data-id={contact.Id} onchange={handlePresenceChange}></lightning-input>
                             </div>
                         </li>
@@ -23,6 +42,9 @@
             <lightning-input type="text" label="First Name" value={newFirstName} onchange={handleFirstNameChange}></lightning-input>
             <lightning-input type="text" label="Last Name" value={newLastName} onchange={handleLastNameChange}></lightning-input>
             <lightning-button label="Add New Contact" onclick={handleCreateContact}></lightning-button>
+        </div>
+        <div class="slds-var-m-around_medium">
+            <lightning-button label="Done Marking Attendance" onclick={handleDoneMarkingAttendance} class="slds-var-m-top_small"></lightning-button>
         </div>
     </lightning-card>
 </template>
