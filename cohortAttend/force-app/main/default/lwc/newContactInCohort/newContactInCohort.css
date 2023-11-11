@@ -1,0 +1,24 @@
+.my-brand {
+    --slds-c-button-brand-color-background: #8a2be2;
+}
+
+
+
+
+
+
+
+
+
+/* .custom-create-button {
+    display: block;
+    margin: 1rem auto; /* Adds margin on top and bottom, and auto margin on left and right for centering */
+    /* background-color: #8a2be2; /* This is a color similar to $palette-violet-40 */
+    /* color: white; Sets the text color to white
+    border: none; Removes any border
+}  */
+
+
+/* .custom-create-button:hover, .custom-create-button:active {
+    background-color: #7a25d2;  Slightly darker shade for hover/active states 
+} */ 
