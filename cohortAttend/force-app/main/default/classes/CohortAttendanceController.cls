@@ -31,19 +31,6 @@ public with sharing class CohortAttendanceController {
             throw new AuraHandledException(e.getMessage());
         }
     }
-
-    // @AuraEnabled
-    // public static Contact createAndMarkContact(String firstName, String lastName, Date serviceDate) {
-    //     Contact newContact = new Contact(FirstName = firstName, LastName = lastName, Worship_Cohort__c = true);
-        
-    //     insert newContact;
-
-    //     // Create a Worshipper__c record for the new contact
-    //     // Worshipper__c newWorshipper = new Worshipper__c(Contact_Lookup__c = newContact.Id, Date__c = serviceDate);
-    //     // insert newWorshipper;
-
-    //     return newContact;
-    // }
     @AuraEnabled
     public static Contact createWorshipCohortContact(String firstName, String lastName) {
     Contact newContact = new Contact(FirstName = firstName, LastName = lastName, Worship_Cohort__c = true);
