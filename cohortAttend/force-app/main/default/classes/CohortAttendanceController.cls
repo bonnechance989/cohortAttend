@@ -26,7 +26,8 @@ public with sharing class CohortAttendanceController {
             );
             insert attendanceRecord;
             return attendanceRecord;
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
     }
@@ -48,9 +49,19 @@ public with sharing class CohortAttendanceController {
     Contact newContact = new Contact(FirstName = firstName, LastName = lastName, Worship_Cohort__c = true);
     insert newContact;
     return newContact;
-}
+    }
 
-
+    @AuraEnabled
+    public static Communion__c createCommunionRecord(Id contactId, Date serviceDate){
+        try {
+            Communion__c Communion = new Communion__c (Date__c = serviceDate, Contact__c = contactId, Name = serviceDate + ': ' + contactId); 
+            insert Communion;
+            return Communion;
+        }
+        catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
 
     @AuraEnabled
     public static void unmarkContactPresent(Id worshipperId) {
