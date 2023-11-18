@@ -82,7 +82,17 @@ export default class WorshipServiceAttendance extends LightningElement {
             this.showToast('Error', 'Error creating Worship Service record: ' + error.body.message, 'error');
         });
     }
-
+    handleCommunionChange(event) {
+        const contactId = event.target.dataset.id;
+        const communion = event.target.checked;
+    
+        this.contacts = this.contacts.map(contact => {
+            if (contact.Id === contactId) {
+                return {...contact, Communion__c: communion};
+            }
+            return contact;
+        });
+        
     handleErrors(error) {
         console.error('Error:', error);
         this.errorMessage = error.message || 'Unknown error';

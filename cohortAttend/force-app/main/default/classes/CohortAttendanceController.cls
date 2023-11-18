@@ -41,11 +41,20 @@ public with sharing class CohortAttendanceController {
     @AuraEnabled
     public static Communion__c createCommunionRecord(Id contactId, Date serviceDate){
         try {
-            Communion__c Communion = new Communion__c (Date__c = serviceDate, Contact__c = contactId, Name = serviceDate + ': ' + contactId); 
-            insert Communion;
-            return Communion;
-        }
-        catch (Exception e) {
+            // Create a new Communion record with the Contact ID and Service Date
+            Communion__c communionRecord = new Communion__c(
+                Date__c = serviceDate, 
+                Contact__c = contactId,
+                Name = 'Communion for : ' + contactId // Set the Name field using the Contact ID
+            );
+    
+            // Insert the Communion record into the database
+            insert communionRecord;
+    
+            // Return the newly created Communion record
+            return communionRecord;
+        } catch (Exception e) {
+            // Handle exceptions
             throw new AuraHandledException(e.getMessage());
         }
     }
