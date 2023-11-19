@@ -114,6 +114,13 @@ public with sharing class CohortAttendanceController {
             
         }
     }
+    @AuraEnabled
+    public static Group_Member__c markGroupMemberPresent(Id contactId, Date serviceDate, String groupName) {
+        Worshipper__c newWorshipper = new Worshipper__c(Contact_Lookup__c = contactId, Date__c = serviceDate);
+        insert newWorshipper;
+        return newWorshipper;
+    }
+    
 }
 
 
