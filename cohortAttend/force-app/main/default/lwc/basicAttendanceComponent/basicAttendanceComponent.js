@@ -1,105 +1,43 @@
-import { LightningElement, track, api } from 'lwc';
-import unmarkContactPresent from '@salesforce/apex/CohortAttendanceController.unmarkContactPresent';
-import getWorshipCohortContacts from '@salesforce/apex/CohortAttendanceController.getWorshipCohortContacts';
-import markContactPresent from '@salesforce/apex/CohortAttendanceController.markContactPresent';
-import createWorshipAttendanceRecord from '@salesforce/apex/CohortAttendanceController.createWorshipAttendanceRecord';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { LightningElement, wire, track, api } from 'lwc';
+import addGroupAttendanceRecord from '@salesforce/apex/CohortAttendanceController.addGroupAttendanceRecord';
 
-export default class WorshipServiceAttendance extends LightningElement {
-    @track contacts = [];
-    @track newFirstName = '';
-    @track newLastName = '';
-    @api serviceDate = new Date().toISOString().slice(0, 10); // YYYY-MM-DD format
-    @track totalAttendance = 0; 
-    @track attendanceRecords = [];
-    errorMessage = '';
+export default class basicAttendanceComponent extends LightningElement {
+    @track groupNameInput;
+    @track input1;
+    @track attendanceTotalInput;
 
-    connectedCallback() {
-        this.fetchContacts();
-    }
-
-    fetchContacts() {
-        console.log('fetchContacts called');
-        getWorshipCohortContacts({ serviceDate: this.serviceDate })
-        .then(result => {
-            console.log('Contacts fetched:', result);
-            this.contacts = [...result].sort((a, b) => a.LastName.localeCompare(b.LastName));
-            console.log('Sorted contacts:', this.contacts);
-            this.updateTotalAttendance();
-        })
-        .catch(error => this.handleErrors(error));
-    }
-
-    updateTotalAttendance() {
-        console.log('Updating total attendance');
-        this.totalAttendance = this.contacts.filter(contact => contact.Present__c).length;
-        console.log('Total attendance:', this.totalAttendance);
-    }
-
-    handleFirstNameChange(event) {
-        this.newFirstName = event.target.value;
-    }
-
-    handleLastNameChange(event) {
-        this.newLastName = event.target.value;
-    }
-
-    handlePresenceChange(event) {
-        const contactId = event.target.dataset.id;
-        const present = event.target.checked;
-
-        this.contacts = this.contacts.map(contact => {
-            if (contact.Id === contactId) {
-                return {...contact, Present__c: present};
-            }
-            return contact;
-        });
-
-        markContactPresent({ contactId: contactId, serviceDate: this.serviceDate })
-        .then(() => {
-            // this.showToast('Success', 'Contact marked as present', 'success');
-            this.updateTotalAttendance();
-        })
-        .catch(error => this.handleErrors(error));
+    handleGroupNameChange(event) {
+        this.groupNameInput = event.target.value;
     }
 
     handleDateChange(event) {
-        this.serviceDate = event.target.value;
-        this.fetchContacts(); // Optionally refresh the list based on the new date
+        this.input1 = event.target.value;
     }
 
-    handleTotalAttendanceChange(event) {
-        this.totalAttendance = parseInt(event.target.value, 10);
+    handleAttendanceChange(event) {
+        this.attendanceTotalInput = event.target.value;
     }
 
-    handleDoneMarkingAttendance() {
-        createWorshipAttendanceRecord({ serviceDate: this.serviceDate, totalAttendance: this.totalAttendance })
+    addRecord() {
+        console.log('Adding Record with:', {
+            groupNameInput: this.groupNameInput, 
+            input1: this.input1, 
+            attendanceTotalInput: this.attendanceTotalInput
+        });
+
+       
+        const attendanceTotal = parseInt(this.attendanceTotalInput, 10);   //using parseInt because it might give me a string, and 10 for base 10
+
+        addGroupAttendanceRecord({ 
+            groupNameInput: this.groupNameInput, 
+            input1: this.input1, 
+            attendanceTotalInput: attendanceTotal
+        })
         .then(result => {
-            this.showToast('Success', 'Worship Service record created', 'success');
-            
+            console.log('Record Added Successfully:', result);
         })
         .catch(error => {
-            this.showToast('Error', 'Error creating Worship Service record: ' + error.body.message, 'error');
+            console.error('Error in Adding Record:', error);
         });
-    }
-    handleCommunionChange(event) {
-        const contactId = event.target.dataset.id;
-        const communion = event.target.checked;
-    
-        this.contacts = this.contacts.map(contact => {
-            if (contact.Id === contactId) {
-                return {...contact, Communion__c: communion};
-            }
-            return contact;
-        });
-        
-    handleErrors(error) {
-        console.error('Error:', error);
-        this.errorMessage = error.message || 'Unknown error';
-        this.showToast('Error', this.errorMessage, 'error');
-    }
-
-    showToast(title, message, variant) {
-        this.dispatchEvent(new ShowToastEvent({ title, message, variant }));
     }
 }

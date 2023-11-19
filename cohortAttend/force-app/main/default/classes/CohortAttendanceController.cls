@@ -53,7 +53,8 @@ public with sharing class CohortAttendanceController {
     
             // Return the newly created Communion record
             return communionRecord;
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             // Handle exceptions
             throw new AuraHandledException(e.getMessage());
         }
@@ -69,4 +70,50 @@ public with sharing class CohortAttendanceController {
         return [SELECT Id, Date__c, Number_in_Attendance__c FROM Worship_Service__c ORDER BY Date__c DESC];
     }
 
+    @AuraEnabled
+    public static void addGroupAttendanceRecord (String groupNameInput, Date input1, Integer attendanceTotalInput) {
+        List<Group_1__c> newGroup1List = new List<Group_1__c> (); 
+        List<Group_2__c> newGroup2List = new List<Group_2__c> ();  
+        List<Group_3__c> newGroup3List = new List<Group_3__c> ();  
+        
+        try {
+        if(groupNameInput == 'Group 1') {
+            Group_1__c newGroup1 = new Group_1__c(
+            Date__c = input1,
+            Attendance__c = attendanceTotalInput,
+            Name = 'Group 1');
+            newGroup1List.add(newGroup1);
+        }
+        else if (groupNameInput == 'Group 2') {
+            Group_2__c newGroup2 = new Group_2__c(
+            Date__c = input1,
+            Attendance__c = attendanceTotalInput,
+            Name = 'Group 2');
+            newGroup2List.add(newGroup2);
+        }
+        else if(groupNameInput == 'Group 3') {
+            Group_3__c newGroup3 = new Group_3__c(
+            Date__c = input1,
+            Attendance__c = attendanceTotalInput,
+            Name = 'Group 3');
+            newGroup3List.add(newGroup3);
+        }
+        
+        if (!newGroup1List.isEmpty()) {
+            insert newGroup1List;
+        }
+        if (!newGroup2List.isEmpty()) {
+            insert newGroup2List;
+        }
+        if (!newGroup3List.isEmpty()) {
+            insert newGroup3List;
+        }
+        }   
+        catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+            
+        }
+    }
 }
+
+
