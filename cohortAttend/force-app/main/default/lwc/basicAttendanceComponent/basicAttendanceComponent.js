@@ -3,7 +3,7 @@ import addGroupAttendanceRecord from '@salesforce/apex/CohortAttendanceControlle
 
 export default class basicAttendanceComponent extends LightningElement {
     @track groupNameInput;
-    @track input1;
+    @track meetingDate;
     @track attendanceTotalInput;
 
     handleGroupNameChange(event) {
@@ -11,7 +11,7 @@ export default class basicAttendanceComponent extends LightningElement {
     }
 
     handleDateChange(event) {
-        this.input1 = event.target.value;
+        this.meetingDate = event.target.value;
     }
 
     handleAttendanceChange(event) {
@@ -21,7 +21,7 @@ export default class basicAttendanceComponent extends LightningElement {
     addRecord() {
         console.log('Adding Record with:', {
             groupNameInput: this.groupNameInput, 
-            input1: this.input1, 
+            meetingDate: this.meetingDate, 
             attendanceTotalInput: this.attendanceTotalInput
         });
 
@@ -30,7 +30,7 @@ export default class basicAttendanceComponent extends LightningElement {
 
         addGroupAttendanceRecord({ 
             groupNameInput: this.groupNameInput, 
-            input1: this.input1, 
+            meetingDate: this.meetingDate, 
             attendanceTotalInput: attendanceTotal
         })
         .then(result => {

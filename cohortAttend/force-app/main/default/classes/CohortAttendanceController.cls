@@ -71,7 +71,7 @@ public with sharing class CohortAttendanceController {
     }
 
     @AuraEnabled
-    public static void addGroupAttendanceRecord (String groupNameInput, Date input1, Integer attendanceTotalInput) {
+    public static void createGroupAttendanceRecord (String groupNameInput, Date meetingDate, Integer attendanceTotalInput) {
         List<Group_1__c> newGroup1List = new List<Group_1__c> (); 
         List<Group_2__c> newGroup2List = new List<Group_2__c> ();  
         List<Group_3__c> newGroup3List = new List<Group_3__c> ();  
@@ -79,21 +79,21 @@ public with sharing class CohortAttendanceController {
         try {
         if(groupNameInput == 'Group 1') {
             Group_1__c newGroup1 = new Group_1__c(
-            Date__c = input1,
+            Date__c = meetingDate,
             Attendance__c = attendanceTotalInput,
             Name = 'Group 1');
             newGroup1List.add(newGroup1);
         }
         else if (groupNameInput == 'Group 2') {
             Group_2__c newGroup2 = new Group_2__c(
-            Date__c = input1,
+            Date__c = meetingDate,
             Attendance__c = attendanceTotalInput,
             Name = 'Group 2');
             newGroup2List.add(newGroup2);
         }
         else if(groupNameInput == 'Group 3') {
             Group_3__c newGroup3 = new Group_3__c(
-            Date__c = input1,
+            Date__c = meetingDate,
             Attendance__c = attendanceTotalInput,
             Name = 'Group 3');
             newGroup3List.add(newGroup3);
@@ -114,13 +114,64 @@ public with sharing class CohortAttendanceController {
             
         }
     }
-    @AuraEnabled
-    public static Group_Member__c markGroupMemberPresent(Id contactId, Date serviceDate, String groupName) {
-        Worshipper__c newWorshipper = new Worshipper__c(Contact_Lookup__c = contactId, Date__c = serviceDate);
-        insert newWorshipper;
-        return newWorshipper;
+
+    @AuraEnabled(cacheable=true)
+    public static List<Contact> getContactsInGroup1(Date serviceDate) {
+        return [
+            SELECT Id, FirstName, LastName
+            FROM Contact 
+            WHERE Group_1__c = true
+        ];
     }
+    @AuraEnabled(cacheable=true)
+    public static List<Contact> getContactsInGroup2(Date serviceDate) {
+        return [
+            SELECT Id, FirstName, LastName
+            FROM Contact 
+            WHERE Group_2__c = true
+        ];
+    }
+    @AuraEnabled(cacheable=true)
+    public static List<Contact> getContactsInGroup3(Date serviceDate) {
+        return [
+            SELECT Id, FirstName, LastName
+            FROM Contact 
+            WHERE Group_3__c = true
+        ];
+    }
+    @AuraEnabled
+public static Attendee__c markContactInGroupPresent(Id contactId, Date meetingDate, String groupName) {
+    Attendee__c newAttendee = new Attendee__c(Contact__c = contactId, Date__c = meetingDate, Name = groupName);
     
+    if (groupName == 'Group 1') {
+        newAttendee.Group__c = true;
+    }
+    if (groupName == 'Group 2') {
+        newAttendee.Group_2__c = true;
+    }
+    if (groupName == 'Group 3') {
+        newAttendee.Group_3__c = true;
+    }
+
+    insert newAttendee;
+    return newAttendee;
+    }   
+    @AuraEnabled
+    public static void unmarkContactInGroupPresent(Id contactId) {
+        delete [SELECT Contact__c FROM Attendee__c WHERE Contact__c = :contactId LIMIT 1];
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<Group_1__c> getGroupOneAttendanceRecords() {
+        return [SELECT Id, Date__c, Attendance__c FROM  Group_1__c ORDER BY Date__c DESC];
+    }
+    @AuraEnabled(cacheable=true)
+    public static List<Group_2__c> getGroupTwoAttendanceRecords() {
+        return [SELECT Id, Date__c, Attendance__c FROM  Group_2__c ORDER BY Date__c DESC];
+    }
+    @AuraEnabled(cacheable=true)
+    public static List<Group_3__c> getGroupThreeAttendanceRecords() {
+        return [SELECT Id, Date__c, Attendance__c FROM  Group_3__c ORDER BY Date__c DESC];
+    }
+
 }
-
-

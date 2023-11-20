@@ -1,3 +1,39 @@
 <template>
-    
+    <lightning-card title="Attendance">
+        <lightning-button label="Add to Records" slot="actions" onclick={addRecord}></lightning-button>
+        <div class="slds-var-m-around_medium">
+            <lightning-input type="text" name="groupNameInput" label="Enter Group Name" onchange={handleGroupNameChange}></lightning-input>
+        </div>
+        <div class="slds-var-m-around_medium">
+            <lightning-input type="date" name="meetingDate" label="Enter Date" onchange={handleDateChange}></lightning-input>
+        </div>       
+        <div class="slds-var-m-around_medium">
+            <lightning-input type="number" name="attendanceTotalInput" label="Enter Attendance Total" onchange={handleAttendanceChange}></lightning-input>
+        </div>
+        
+       
+        <div class="slds-var-m-around_medium">
+            <template if:true={contacts}>
+                <ul class="slds-list_vertical slds-list_vertical-space">
+                    <template for:each={contacts} for:item="contact">
+                        <li key={contact.Id}>
+                            <div class="contact-item">
+                                <span>{contact.FirstName} {contact.LastName}</span>
+                                <lightning-input type="checkbox" label="Present" checked={contact.Present__c} data-id={contact.Id} onchange={handlePresenceChange}></lightning-input>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+            <template if:true={errorMessage}>
+                <div class="slds-notify slds-notify_alert slds-theme_error" role="alert">
+                    <h2>{errorMessage}</h2>
+                </div>
+            </template>
+        </div>
+      
+        <div class="slds-var-m-around_medium">
+            <lightning-button label="Done Marking Attendance" onclick={handleDoneMarkingAttendance} class="slds-var-m-top_small"></lightning-button>
+        </div>
+    </lightning-card>
 </template>

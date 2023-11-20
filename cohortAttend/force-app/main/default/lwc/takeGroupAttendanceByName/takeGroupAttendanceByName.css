@@ -1,0 +1,11 @@
+.contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--lwc-spacingMedium, 1rem);
+}
+.contact-checkboxes {
+    display: flex;
+    align-items: center;
+   
+}
