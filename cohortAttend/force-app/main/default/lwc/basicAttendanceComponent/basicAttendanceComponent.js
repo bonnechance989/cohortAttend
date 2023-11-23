@@ -1,5 +1,6 @@
 import { LightningElement, wire, track, api } from 'lwc';
-import addGroupAttendanceRecord from '@salesforce/apex/CohortAttendanceController.addGroupAttendanceRecord';
+import createGroupAttendanceRecord  from '@salesforce/apex/CohortAttendanceController.createGroupAttendanceRecord';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class basicAttendanceComponent extends LightningElement {
     @track groupNameInput;
@@ -19,25 +20,37 @@ export default class basicAttendanceComponent extends LightningElement {
     }
 
     addRecord() {
-        console.log('Adding Record with:', {
-            groupNameInput: this.groupNameInput, 
-            meetingDate: this.meetingDate, 
-            attendanceTotalInput: this.attendanceTotalInput
-        });
+        const VALID_GROUP_NAMES = ['Group 1', 'Group 2', 'Group 3'];
+        const validGroupNamesString = VALID_GROUP_NAMES.join(', '); // Convert array to a string
+    
+        if (!VALID_GROUP_NAMES.includes(this.groupNameInput)) {
+            // Invalid group name, show error toast with valid group names
+            this.showToast('Error', `Invalid group name. Accepted names are: ${validGroupNamesString}`, 'error');
+            return; // Exit the function
+        }
 
-       
         const attendanceTotal = parseInt(this.attendanceTotalInput, 10);   //using parseInt because it might give me a string, and 10 for base 10
-
-        addGroupAttendanceRecord({ 
+        createGroupAttendanceRecord({
             groupNameInput: this.groupNameInput, 
             meetingDate: this.meetingDate, 
             attendanceTotalInput: attendanceTotal
         })
+        
         .then(result => {
-            console.log('Record Added Successfully:', result);
+            this.showToast('Success', 'Attendance record created', 'success');
         })
         .catch(error => {
-            console.error('Error in Adding Record:', error);
+            this.showToast('Error', `Error creating attendance record: ${error.body.message}`, 'error');
         });
     }
+        showToast(title, message, variant) {
+            const event = new ShowToastEvent({
+                title: title,
+                message: message,
+                variant: variant,
+            });
+            this.dispatchEvent(event);
+        }
 }
+
+

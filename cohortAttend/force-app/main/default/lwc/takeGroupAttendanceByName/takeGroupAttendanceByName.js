@@ -12,12 +12,12 @@ export default class takeGroupAttendanceByName extends LightningElement {
     @track groupNameInput = '';
     @api meetingDate = new Date().toISOString().slice(0, 10); // YYYY-MM-DD format
     @track totalAttendance = 0; 
-    @track attendanceRecords = [];
     errorMessage = '';
 
     connectedCallback() {
-        
+        // This method is called when the component is inserted into the DOM.
     }
+
     fetchContacts() {
         if (this.groupNameInput === 'Group 1') {
             getContactsInGroup1({ meetingDate: this.meetingDate })
@@ -44,28 +44,21 @@ export default class takeGroupAttendanceByName extends LightningElement {
                 .catch(error => this.handleErrors(error));
         }
     }
+
     handleGroupNameChange(event) {
         this.groupNameInput = event.target.value;
         this.fetchContacts(); // Fetch contacts based on the selected group
     }
+
     updateTotalAttendance() {
-        console.log('Updating total attendance');
         this.totalAttendance = this.contacts.filter(contact => contact.Present__c).length;
-        console.log('Total attendance:', this.totalAttendance);
-    }
-
-    handleFirstNameChange(event) {
-        this.newFirstName = event.target.value;
-    }
-
-    handleLastNameChange(event) {
-        this.newLastName = event.target.value;
     }
 
     handlePresenceChange(event) {
         const contactId = event.target.dataset.id;
         const present = event.target.checked;
 
+        // Update the contacts array with the present status
         this.contacts = this.contacts.map(contact => {
             if (contact.Id === contactId) {
                 return {...contact, Present__c: present};
@@ -73,18 +66,15 @@ export default class takeGroupAttendanceByName extends LightningElement {
             return contact;
         });
 
+        // Call server-side Apex method based on the present status
         if (present) {
-            markContactInGroupPresent({ contactId: contactId, meetingDate: this.meetingDate, groupName: this.groupNameInput})
-            .then(() => {
-                this.updateTotalAttendance();
-            })
-            .catch(error => this.handleErrors(error));
+            markContactInGroupPresent({ contactId: contactId, meetingDate: this.meetingDate, groupName: this.groupNameInput })
+                .then(() => this.updateTotalAttendance())
+                .catch(error => this.handleErrors(error));
         } else {
             unmarkContactInGroupPresent({ contactId: contactId })
-            .then(() => {
-                this.updateTotalAttendance();
-            })
-            .catch(error => this.handleErrors(error));
+                .then(() => this.updateTotalAttendance())
+                .catch(error => this.handleErrors(error));
         }
     }
 
@@ -103,7 +93,7 @@ export default class takeGroupAttendanceByName extends LightningElement {
             attendanceTotalInput: this.totalAttendance, 
             groupNameInput: this.groupNameInput 
         })
-        .then(result => {
+        .then(() => {
             this.showToast('Success', 'Attendance record created', 'success');
         })
         .catch(error => {
