@@ -3,6 +3,7 @@ import unmarkContactPresent from '@salesforce/apex/CohortAttendanceController.un
 import getWorshipCohortContacts from '@salesforce/apex/CohortAttendanceController.getWorshipCohortContacts';
 import markContactPresent from '@salesforce/apex/CohortAttendanceController.markContactPresent';
 import createWorshipAttendanceRecord from '@salesforce/apex/CohortAttendanceController.createWorshipAttendanceRecord';
+import createCommunionRecord from '@salesforce/apex/CohortAttendanceController.createCommunionRecord';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class WorshipServiceAttendance extends LightningElement {
@@ -45,7 +46,7 @@ export default class WorshipServiceAttendance extends LightningElement {
     } 
     handlePresenceChange(event) {
         const contactId = event.target.dataset.id;
-        const communion = event.target.checked;
+        const present = event.target.checked;
 
         this.contacts = this.contacts.map(contact => {
             if (contact.Id === contactId) {
@@ -62,17 +63,24 @@ export default class WorshipServiceAttendance extends LightningElement {
     .catch(error => this.handleErrors(error));
     }
 
-    handleCommunionChange(event) {
-        const contactId = event.target.dataset.id;
-        const present = event.target.checked;
-
-        this.contacts = this.contacts.map(contact => {
-            if (contact.Id === contactId) {
-                return {...contact, Communion__c: communion};
-            }
-            return contact;
-        });
+    handleCommunionCheckboxChange(event) {
+        let contactId = event.target.dataset.id;
+        if(event.target.checked) {
+            createCommunionRecord({ contactId: contactId, serviceDate: this.serviceDate })
+                .then(result => {
+                    // Handle success - you can use result if needed
+                    this.showToast('Success', 'Communion record created for contact', 'success');
+                })
+                .catch(error => {
+                    // Handle error
+                    this.handleErrors(error);
+                    this.showToast('Error', 'Error creating Communion record: ' + error.body.message, 'error');
+                });
+        }
     }
+    
+    
+
     handleDateChange(event) {
         this.serviceDate = event.target.value;
         this.fetchContacts(); // Optionally refresh the list based on the new date

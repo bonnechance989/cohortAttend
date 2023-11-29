@@ -1,0 +1,14 @@
+<template>
+    <lightning-card title="Attendance">
+        <lightning-button label="Add to Records" slot="actions" onclick={addRecord}></lightning-button>
+        <div class="slds-var-m-around_medium">
+                    <lightning-input type="text" name="groupNameInput" label="Enter Group Name" onchange={handleGroupNameChange}></lightning-input>
+        </div>
+        <div class="slds-var-m-around_medium">
+            <lightning-input type="date" name="meetingDate" label="Enter Date" onchange={handleDateChange}></lightning-input>
+        </div>       
+    <div class="slds-var-m-around_medium">
+        <lightning-input type="number" name="attendanceTotalInput" label="Enter Attendance Total" onchange={handleAttendanceChange}></lightning-input>
+    </div>
+</lightning-card>
+</template>
