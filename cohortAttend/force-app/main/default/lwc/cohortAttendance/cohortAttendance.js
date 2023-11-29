@@ -1,7 +1,7 @@
 import { LightningElement, track, api } from 'lwc';
 import unmarkContactPresent from '@salesforce/apex/CohortAttendanceController.unmarkContactPresent';
 import getWorshipCohortContacts from '@salesforce/apex/CohortAttendanceController.getWorshipCohortContacts';
-import createAndMarkContact from '@salesforce/apex/CohortAttendanceController.createAndMarkContact';
+//import createAndMarkContact from '@salesforce/apex/CohortAttendanceController.createAndMarkContact';
 import markContactPresent from '@salesforce/apex/CohortAttendanceController.markContactPresent';
 import createWorshipAttendanceRecord from '@salesforce/apex/CohortAttendanceController.createWorshipAttendanceRecord';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
@@ -58,35 +58,35 @@ export default class WorshipServiceAttendance extends LightningElement {
 
         markContactPresent({ contactId: contactId, serviceDate: this.serviceDate })
         .then(() => {
-            this.showToast('Success', 'Contact marked as present', 'success');
+            // this.showToast('Success', 'Contact marked as present', 'success');
             this.updateTotalAttendance();
         })
         .catch(error => this.handleErrors(error));
     }
 
-    handleCreateContact() {
-        if (this.newFirstName && this.newLastName) {
-            createAndMarkContact({ 
-                firstName: this.newFirstName, 
-                lastName: this.newLastName, 
-                serviceDate: this.serviceDate 
-            })
-            .then(() => {
-                this.newFirstName = '';
-                this.newLastName = '';
-                return this.fetchContacts(); // Fetch contacts again to refresh the list
-            })
-            .then(() => {
-                this.updateTotalAttendance(); // Update total attendance after the list is refreshed
-                this.showToast('Success', 'New contact added and marked as present', 'success');
-            })
-            .catch(error => {
-                this.handleErrors(error);
-            });
-        } else {
-            this.showToast('Error', 'Please enter both first and last name', 'error');
-        }
-    }
+    // handleCreateContact() {
+    //     if (this.newFirstName && this.newLastName) {
+    //         createAndMarkContact({ 
+    //             firstName: this.newFirstName, 
+    //             lastName: this.newLastName, 
+    //             serviceDate: this.serviceDate 
+    //         })
+    //         .then(() => {
+    //             this.newFirstName = '';
+    //             this.newLastName = '';
+    //             return this.fetchContacts(); // Fetch contacts again to refresh the list
+    //         })
+    //         .then(() => {
+    //             this.updateTotalAttendance(); // Update total attendance after the list is refreshed
+    //             this.showToast('Success', 'New contact added and marked as present', 'success');
+    //         })
+    //         .catch(error => {
+    //             this.handleErrors(error);
+    //         });
+    //     } else {
+    //         this.showToast('Error', 'Please enter both first and last name', 'error');
+    //     }
+    // }
 
     handleDateChange(event) {
         this.serviceDate = event.target.value;

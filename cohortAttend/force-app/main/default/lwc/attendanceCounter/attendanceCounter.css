@@ -1,11 +1,11 @@
-.contact-item {
+/* .attendance-counter{
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding-top: var(--lwc-spacingMedium, 1rem);
-}
+} */
 
-/* .new-contact {
+.new-contact {
     border-top: 1px solid #d8dde6;
     padding-top: var(--lwc-spacingMedium, 1rem);
-} */
+}

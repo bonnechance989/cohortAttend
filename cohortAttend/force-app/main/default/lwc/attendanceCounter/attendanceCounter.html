@@ -1,9 +1,33 @@
 <template>
-    <div class="attendance-counter">
-        <template for:each={sortedRecords} for:item="record">
-            <div key={record.date} class="slds-var-m-around_small">
-                Date: {record.date}, Total Attendance: {record.totalAttendance}
-            </div>
-        </template>
-    </div>
+    <lightning-card title="Worship Totals" icon-name="standard:contact">
+        <div class="slds-p-around_medium">
+            <!-- Define the Table Structure -->
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                <!-- Table Header -->
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Date">Date</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate slds-text-align_right" title="Totals">Totals</div>
+                        </th>
+                    </tr>
+                </thead>
+                <!-- Table Body -->
+                <tbody>
+                    <template for:each={sortedRecords} for:item="record">
+                        <tr key={record.date} class="slds-hint-parent">
+                            <td data-label="Date">
+                                <div class="slds-truncate" title={record.date}>{record.date}</div>
+                            </td>
+                            <td data-label="Total Attendance" class="slds-text-align_right">
+                                <div class="slds-truncate" title={record.totalAttendance}>{record.totalAttendance}</div>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </lightning-card>
 </template>

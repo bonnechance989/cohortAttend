@@ -1,0 +1,17 @@
+<template>
+    <lightning-card title="Create Worship Cohort Contact" icon-name="standard:contact">
+        <div class="slds-var-m-around_medium">
+            <lightning-input label="First Name" value={firstName} onchange={handleFirstNameChange}></lightning-input>
+            <lightning-input label="Last Name" value={lastName} onchange={handleLastNameChange}></lightning-input>
+        </div>
+        <div class="slds-align_absolute-center">
+            <lightning-button
+                class="my-brand"
+                variant="brand"
+                label="Create Contact"
+                title="Create a new contact in the worship cohort"
+                onclick={createContact}>
+            </lightning-button>
+        </div>
+    </lightning-card>
+</template>

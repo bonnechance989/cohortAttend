@@ -31,21 +31,35 @@ public with sharing class CohortAttendanceController {
         }
     }
 
-    @AuraEnabled
-    public static Contact createAndMarkContact(String firstName, String lastName, Date serviceDate) {
-        Contact newContact = new Contact(FirstName = firstName, LastName = lastName, Worship_Cohort__c = true);
+    // @AuraEnabled
+    // public static Contact createAndMarkContact(String firstName, String lastName, Date serviceDate) {
+    //     Contact newContact = new Contact(FirstName = firstName, LastName = lastName, Worship_Cohort__c = true);
         
-        insert newContact;
+    //     insert newContact;
 
-        // Create a Worshipper__c record for the new contact
-        Worshipper__c newWorshipper = new Worshipper__c(Contact_Lookup__c = newContact.Id, Date__c = serviceDate);
-        insert newWorshipper;
+    //     // Create a Worshipper__c record for the new contact
+    //     // Worshipper__c newWorshipper = new Worshipper__c(Contact_Lookup__c = newContact.Id, Date__c = serviceDate);
+    //     // insert newWorshipper;
 
-        return newContact;
-    }
+    //     return newContact;
+    // }
+    @AuraEnabled
+    public static Contact createWorshipCohortContact(String firstName, String lastName) {
+    Contact newContact = new Contact(FirstName = firstName, LastName = lastName, Worship_Cohort__c = true);
+    insert newContact;
+    return newContact;
+}
+
+
 
     @AuraEnabled
     public static void unmarkContactPresent(Id worshipperId) {
         delete [SELECT Id FROM Worshipper__c WHERE Id = :worshipperId LIMIT 1];
     }
+
+    @AuraEnabled(cacheable=true)
+    public static List<Worship_Service__c> getWorshipServiceRecords() {
+        return [SELECT Id, Date__c, Number_in_Attendance__c FROM Worship_Service__c ORDER BY Date__c DESC];
+    }
+
 }
